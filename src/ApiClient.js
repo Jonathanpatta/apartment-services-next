@@ -1,6 +1,7 @@
 const { default: axios } = require("axios")
 
-const baseUrl = 'http://localhost:8000'
+// const baseUrl = 'http://localhost:8000'
+const baseUrl = 'https://apartment.kadblue.com'
 
 class ApiClient{
     constructor(user){

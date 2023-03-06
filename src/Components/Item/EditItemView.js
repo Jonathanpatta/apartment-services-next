@@ -151,6 +151,7 @@ function EditForm({item,setItem,handleClose,setOpen}){
               startAdornment={<InputAdornment position="start">₹</InputAdornment>}
               fullWidth 
               id="standard-basic" 
+              type='number'
               label="Price" 
               variant="standard" 
               value={price.toString()}

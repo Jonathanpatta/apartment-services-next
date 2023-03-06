@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { Box, Card, CardActions, CardContent, CardMedia, Divider, Grid, IconButton, Tooltip, Typography } from '@mui/material';
+import { Box, Card, CardActions, CardContent, CardMedia, Divider, Grid, IconButton, Skeleton, Tooltip, Typography } from '@mui/material';
 import { Stack } from '@mui/system';
 import EditItemButton from './EditItemView';
 import { useAuth } from '@/Contexts/Auth';
@@ -10,10 +10,23 @@ import { async } from '@firebase/util';
 
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import EventRepeatIcon from '@mui/icons-material/EventRepeat';
+import OrderItemButton from './OrderItemButton';
 
-export function ConsumerItemView({itemData}) {
+export function ConsumerItemView({itemData,loading}) {
   var item = itemData
+  const [liked, setLiked] = React.useState(false)
+  if(loading){
+    console.log("hi from loading");
+    return (
+      <Stack sx={{maxWidth:345}} >
+        <Skeleton variant="rectangular"  height={200} />
+        <Skeleton variant="text" sx={{ fontSize: '1rem' }} />
+        <Skeleton variant="text" sx={{ fontSize: '1rem' }} width="60%" />
+      </Stack>
+    )
+  }
   return (
     <Card sx={{ maxWidth: 345 }}>
       <CardMedia
@@ -33,16 +46,20 @@ export function ConsumerItemView({itemData}) {
       <CardActions>
         <Box sx={{ display: 'flex', alignItems: 'center',justifyContent:"space-evenly",width:"100%"}}>
             <Tooltip title="Like">
-                <IconButton>
-                    <FavoriteIcon />
+                <IconButton onClick={()=>{setLiked(like=>!like)}}>
+                  {liked?<FavoriteIcon />:<FavoriteBorderIcon/>}
                 </IconButton>
             </Tooltip>
             
-            <Tooltip title="Order">
-                <IconButton>
-                    <ShoppingCartIcon />
-                </IconButton>
-            </Tooltip>
+            {/* <div>
+              <Tooltip title="Order">
+                  <IconButton>
+                      <ShoppingCartIcon />
+                  </IconButton>
+              </Tooltip>
+            </div> */}
+
+            <OrderItemButton item={item}/>
 
             <Tooltip title="Subscribe">
                 <IconButton>
@@ -58,15 +75,20 @@ export function ConsumerItemView({itemData}) {
 export function ConsumerItemListView(){
     const {apiClient} = useAuth()
     var cli = apiClient.Client
+
+    const [loading, setLoading] = React.useState(true)
+
+    var loadingItems = ["","","","","","","",""]
   
-    const [items, setItems] = React.useState([])
+    const [items, setItems] = React.useState(loadingItems)
     
     React.useEffect(() => {
       var uri = encodeURIComponent(`item/list`)
   
       cli.get(uri).then(res => {
         setItems(res.data)
-      })
+        setLoading(false)
+      }).catch(err=>setLoading(false))
   
     }, [])
 
@@ -74,7 +96,7 @@ export function ConsumerItemListView(){
         <Box>
           <Grid container rowSpacing={4} columnSpacing={4}>
               {items.map((item,i) => {
-              return <GridItem key={i} item={item} />
+              return <GridItem key={i} item={item} loading={loading} />
               
               })}
           </Grid>
@@ -82,10 +104,10 @@ export function ConsumerItemListView(){
       )
 }
 
-function GridItem({item,editItem}){
+function GridItem({item,loading}){
     return (
         <Grid item xs={3}>
-            <ConsumerItemView itemData={item} />
+            <ConsumerItemView itemData={item} loading={loading} />
         </Grid>
     )
 }

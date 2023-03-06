@@ -14,7 +14,9 @@ import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import ShopIcon from '@mui/icons-material/Shop';
 import { Box, Breadcrumbs, Button, Container, List, ListItem, ListItemButton, ListItemText, ListSubheader, Stack, Typography } from "@mui/material";
 import Topbar from "@/Components/Topbar";
-import { AuthProvider } from "@/Contexts/Auth";
+import { AuthProvider, useAuth } from "@/Contexts/Auth";
+import UnauthenticatedView from "@/Components/UnauthenticatedView";
+import React from "react";
 
 
 function CustomListItem({icon,text,link,onclick}){
@@ -34,6 +36,12 @@ function CustomListItem({icon,text,link,onclick}){
 }
 
 export default function Profile() {
+
+  var {currentUser} = useAuth()
+  const [authenticated, setAuthenticated] = React.useState(!(!currentUser))
+  if(!authenticated){
+    return <UnauthenticatedView onSuccess={()=>{setAuthenticated(true)}}/>
+  }
   var breadcrumbLinks = [
     {href:"/",text:"Home"},
     {href:"/profile",text:"Profile"}
@@ -69,7 +77,7 @@ export default function Profile() {
                 <CustomListItem icon={<ShopIcon/>} text="My Shop" link="/profile/myshop"/>
 
                 {/* Customers */}
-                <CustomListItem icon={<ListAltIcon/>} text="Current Orders" link="/profile/orders"/>
+                <CustomListItem icon={<ListAltIcon/>} text="Current Orders" link="/profile/currentOrders"/>
                 <CustomListItem icon={<FormatListBulletedIcon/>} text="Order History" />
               </List>
             </nav>
