@@ -7,6 +7,10 @@ import { Box, Container } from "@mui/system";
 import axios from "axios";
 
 export default function MyShop(){
+    var {isAuthenticated} = useAuth()
+    if(!isAuthenticated()){
+        window.location.href = "/";
+    }
     var breadcrumbLinks = [
         {href:"/",text:"Home"},
         {href:"/profile",text:"Profile"},
@@ -14,15 +18,11 @@ export default function MyShop(){
       ]    
       
     return (
-        <AuthProvider>
-            <AlertProvider>
                 <Container >
                     <Box sx={{ my: 4 }}>
                         <BreadcrumbLinks links={breadcrumbLinks}/>
                     </Box>
                     <ItemList/>
                 </Container>
-            </AlertProvider>
-        </AuthProvider>
     )
 }

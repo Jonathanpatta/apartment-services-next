@@ -7,11 +7,15 @@ export default function UnauthenticatedView({onSuccess,onFailure}){
     var {signInWithGoogle} = useAuth()
 
     function login(){
+        
         signInWithGoogle.then(res=>{
+            console.log("successful login good job")
             onSuccess()
-        }).catch(err=>{
+        }).catch((err)=>{
+            console.log("hi from err in unauth view")
             onFailure(err)
         })
+
     }
     return (
         <Container maxWidth="xl">

@@ -36,8 +36,15 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 export default function AddItemButton({ item, addNewItem }) {
   const [open, setOpen] = React.useState(false);
+  
+  var {isAuthenticated} = useAuth()
+  var {CreateAlert} = useAlerts()
 
   const handleClickOpen = () => {
+    if(!isAuthenticated()){
+      CreateAlert({type:"error",text:"Unauthenticated"})
+      return
+    }
     setOpen(true);
   };
 

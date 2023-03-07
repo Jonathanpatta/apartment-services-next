@@ -1,4 +1,4 @@
-import { Avatar, Box, Grid, IconButton, InputAdornment, useTheme } from "@mui/material";
+import { Avatar, Box, Button, Grid, IconButton, InputAdornment, useTheme } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 // import { ColorModeContext, tokens } from "../../theme";
 import InputBase from "@mui/material/InputBase";
@@ -14,9 +14,9 @@ import Link from "@/Link";
 
 const Profile = ({user, signInCallback, logoutCallback}) => {
     var profileComponent = 
-    <IconButton  onClick={signInCallback}>
-        <PersonOutlinedIcon />
-    </IconButton>
+    <Button variant="outlined" color="secondary" onClick={signInCallback} startIcon={<PersonOutlinedIcon />}>
+        LOGIN
+    </Button>
     if(user){
         profileComponent = 
         <IconButton LinkComponent={Link} noLinkStyle href="/profile">

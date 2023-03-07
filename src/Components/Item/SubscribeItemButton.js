@@ -6,15 +6,20 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import { Checkbox, Divider, FormControlLabel, FormGroup, IconButton, Input, InputAdornment, InputLabel, Tooltip } from '@mui/material';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import { Checkbox, Divider, FormControlLabel, FormGroup, IconButton, Input, Select,MenuItem, InputLabel, Tooltip } from '@mui/material';
+import EventRepeatIcon from '@mui/icons-material/EventRepeat';
 import { useAuth } from '@/Contexts/Auth';
 import { useAlerts } from '@/Contexts/Alerts';
 
-export default function OrderItemButton({item}) {
+export default function SubscribeItemButton({item}) {
   const [open, setOpen] = React.useState(false);
   const [note, setNote] = React.useState("")
   const [writeNote, setWriteNote] = React.useState(false)
+  const [type, setType] = React.useState('')
+
+  function HandleTypeChange(e){
+    setType(e.target.value)
+  }
 
   var {apiClient,isAuthenticated} = useAuth()
   var cli = apiClient.Client
@@ -34,15 +39,19 @@ export default function OrderItemButton({item}) {
       CreateAlert({type:"error",text:"Unauthenticated"})
       return
     }
-    var uri = `order/create/${encodeURIComponent(apiClient.consumer.sk)}`
+    var uri = `subscription/create/${encodeURIComponent(apiClient.consumer.sk)}`
     var data = {
         item_id:item.sk,
         item_name:item.name,
+        type:type,
         note: note,
     }
     cli.post(uri,data=data).then(res => {
+      console.log(res.data);
       CreateAlert({type:"success",text:"successfully placed order!"})
-    }).catch(err => console.log(err))
+    }).catch(err => {
+      CreateAlert({type:"error",text:"Couldn't subscribe:"+err})
+    })
     handleClose()
   }
 
@@ -53,22 +62,33 @@ export default function OrderItemButton({item}) {
 
   return (
     <div>
-      <Tooltip title="Order">
+      <Tooltip title="Subscribe">
             <IconButton onClick={handleClickOpen}>
-                <ShoppingCartIcon />
+                <EventRepeatIcon />
             </IconButton>
         </Tooltip>
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>{title}</DialogTitle>
+        <DialogTitle sx={{minWidth:600}}>{title}</DialogTitle>
         <DialogContent>
           <DialogContentText>
             {item?.description}
           </DialogContentText>
           <DialogContentText>
-            Total Price: <b>₹ {item?.price}</b>
+            Total Price: <b>₹ {item?.price}/Month</b>
           </DialogContentText>
           <Divider/>
           <FormGroup>
+            <InputLabel id="subscription-type-label">Type</InputLabel>
+            <Select
+                labelId='subscription-type-label'
+                value={type}
+                label="Type"
+                onChange={HandleTypeChange}
+                >
+                <MenuItem value={10}>Daily</MenuItem>
+                <MenuItem value={20}>Weekly</MenuItem>
+                <MenuItem value={30}>Monthly</MenuItem>
+            </Select>
             <FormControlLabel control={
                 <Checkbox
                     checked={writeNote}

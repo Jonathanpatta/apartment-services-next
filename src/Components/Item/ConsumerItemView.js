@@ -13,12 +13,17 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import EventRepeatIcon from '@mui/icons-material/EventRepeat';
 import OrderItemButton from './OrderItemButton';
+import SubscribeItemButton from './SubscribeItemButton';
 
-export function ConsumerItemView({itemData,loading}) {
+export function ConsumerItemView({itemData,loading,height,withDescription}) {
+  if(!height){
+    height = 200
+  }
+
+
   var item = itemData
   const [liked, setLiked] = React.useState(false)
   if(loading){
-    console.log("hi from loading");
     return (
       <Stack sx={{maxWidth:345}} >
         <Skeleton variant="rectangular"  height={200} />
@@ -28,11 +33,11 @@ export function ConsumerItemView({itemData,loading}) {
     )
   }
   return (
-    <Card sx={{ maxWidth: 345 }}>
+    <Card >
       <CardMedia
         component="img"
         alt="Food Image"
-        height="200"
+        height={height}
         image="https://img.freepik.com/free-vector/cute-burger-holding-knife-fork-cartoon-fast-food-icon-concept-isolated-flat-cartoon-style_138676-2204.jpg?w=2000"
       />
       <CardContent>
@@ -40,6 +45,7 @@ export function ConsumerItemView({itemData,loading}) {
             <Typography gutterBottom variant="h5" component="div" sx={{display:"-webkit-box",WebkitLineClamp:1,WebkitBoxOrient:"vertical",overflow:"hidden"}}>
             {item?.name?item.name:"[NO NAME]"}
             </Typography>
+            {withDescription && <Typography variant='subtitle1'>{item?.description?item.description:"[DESCRIPTION NOT SET]"}</Typography>}
             <Typography variant='subtitle1'><b>₹ {item?.price?item.price:"[PRICE NOT SET]"}</b></Typography>
         </Stack>
       </CardContent>
@@ -61,11 +67,7 @@ export function ConsumerItemView({itemData,loading}) {
 
             <OrderItemButton item={item}/>
 
-            <Tooltip title="Subscribe">
-                <IconButton>
-                    <EventRepeatIcon />
-                </IconButton>
-            </Tooltip>
+            <SubscribeItemButton item={item}/>
         </Box>
       </CardActions>
     </Card>

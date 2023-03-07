@@ -17,6 +17,13 @@ export function AuthProvider({ children }) {
     return auth.createUserWithEmailAndPassword(email, password)
   }
 
+  function isAuthenticated(){
+    if(currentUser && apiClient.hasConsumer() && apiClient.hasProducer()){
+      return true
+    }
+    return false
+  }
+
   var signInWithGoogle = () => {
     var res =  auth.setPersistence( browserLocalPersistence)
                 .then(() => {
@@ -29,7 +36,7 @@ export function AuthProvider({ children }) {
                 })
                 .catch((error) => {
                     // Handle Errors here.
-                    return Promise.reject(error)
+                    throw error
                 });
 
   return res
@@ -69,6 +76,7 @@ export function AuthProvider({ children }) {
   const value = {
     currentUser,
     apiClient,
+    isAuthenticated,
     setApiClient,
     login,
     signup,

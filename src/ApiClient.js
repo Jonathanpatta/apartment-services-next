@@ -62,6 +62,20 @@ class ApiClient{
             .catch(err => console.log(err))
         }
     }
+
+    hasConsumer(){
+        if(this.consumer && this.consumer.sk){
+            return true
+        }
+        return false
+    }
+
+    hasProducer(){
+        if(this.producer && this.producer.sk){
+            return true
+        }
+        return false
+    }
 }
 
 module.exports = ApiClient

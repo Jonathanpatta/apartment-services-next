@@ -15,7 +15,6 @@ import ShopIcon from '@mui/icons-material/Shop';
 import { Box, Breadcrumbs, Button, Container, List, ListItem, ListItemButton, ListItemText, ListSubheader, Stack, Typography } from "@mui/material";
 import Topbar from "@/Components/Topbar";
 import { AuthProvider, useAuth } from "@/Contexts/Auth";
-import UnauthenticatedView from "@/Components/UnauthenticatedView";
 import React from "react";
 
 
@@ -37,10 +36,9 @@ function CustomListItem({icon,text,link,onclick}){
 
 export default function Profile() {
 
-  var {currentUser} = useAuth()
-  const [authenticated, setAuthenticated] = React.useState(!(!currentUser))
-  if(!authenticated){
-    return <UnauthenticatedView onSuccess={()=>{setAuthenticated(true)}}/>
+  var {currentUser,isAuthenticated} = useAuth()
+  if(!isAuthenticated()){
+    window.location.href = "/";
   }
   var breadcrumbLinks = [
     {href:"/",text:"Home"},
@@ -48,7 +46,6 @@ export default function Profile() {
   ]
     return (
       <Container maxWidth="sm">
-        <AuthProvider>
           <Box sx={{ my: 4 }}>
             <BreadcrumbLinks links={breadcrumbLinks}/>
           </Box>
@@ -61,9 +58,9 @@ export default function Profile() {
                   </ListSubheader>
                 }
               >
-                <CustomListItem icon={<ShoppingCartIcon/>} text="Orders"/>
-                <CustomListItem icon={<FavoriteIcon/>} text="Favorites"/>
-                <CustomListItem icon={<EventRepeatIcon/>} text="Subscriptions"/>
+                <CustomListItem icon={<ShoppingCartIcon/>} text="Orders" link="/profile/orderHistory"/>
+                <CustomListItem icon={<FavoriteIcon/>} text="Favorites" link="/profile/favorites"/>
+                <CustomListItem icon={<EventRepeatIcon/>} text="Subscriptions" link="/profile/subscriptions"/>
                 <CustomListItem icon={<LogoutIcon/>} text="Logout"/>
               </List>
               <List
@@ -73,16 +70,12 @@ export default function Profile() {
                   </ListSubheader>
                 }
               >
-                {/* MyItems Shop */}
                 <CustomListItem icon={<ShopIcon/>} text="My Shop" link="/profile/myshop"/>
-
-                {/* Customers */}
                 <CustomListItem icon={<ListAltIcon/>} text="Current Orders" link="/profile/currentOrders"/>
-                <CustomListItem icon={<FormatListBulletedIcon/>} text="Order History" />
+                <CustomListItem icon={<FormatListBulletedIcon/>} link="/profile/orderHistory" text="Order History" />
               </List>
             </nav>
           </Box>
-        </AuthProvider>
       </Container>
     );
   }

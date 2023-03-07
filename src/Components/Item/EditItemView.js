@@ -17,16 +17,24 @@ import Slide from '@mui/material/Slide';
 import { Box, Container, Input, InputAdornment, InputLabel, ListItemButton, TextField, Tooltip } from '@mui/material';
 import theme from '@/Theme';
 import { useAuth } from '@/Contexts/Auth';
+import { useAlerts } from '@/Contexts/Alerts';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
 export default function EditItemButton({item,setItem}) {
+
+  var {isAuthenticated} = useAuth()
+  var {CreateAlert} = useAlerts()
   
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
+    if(!isAuthenticated()){
+      CreateAlert({type:"error",text:"Unauthenticated"})
+      return
+    }
     setOpen(true);
   };
 
@@ -66,6 +74,8 @@ function EditForm({item,setItem,handleClose,setOpen}){
   var {apiClient} = useAuth()
   var cli = apiClient.Client
 
+  var {CreateAlert} = useAlerts()
+
   
 
   function getItem(){
@@ -87,10 +97,11 @@ function EditForm({item,setItem,handleClose,setOpen}){
       .then(res => {
         setItem(res.data)
         setOpen(false)
+        CreateAlert({type:"success",text:"succesfully updated item"})
       })
       .catch(err => {
-        console.log(err);
         setOpen(false)
+        CreateAlert({type:"error",text:"could not update item:"+err})
       })
     }
     else{

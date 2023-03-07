@@ -27,8 +27,12 @@ const columns = [
   { field: 'note', headerName: 'Note', width: 200 },
 ];
 
-export default function CurrentOrders() {
+export default function CurrentOrdersPage() {
     
+    var {isAuthenticated} = useAuth()
+    if(!isAuthenticated()){
+      window.location.href = "/";
+    }
     var breadcrumbLinks = [
         {href:"/",text:"Home"},
         {href:"/profile",text:"Profile"},
@@ -117,8 +121,8 @@ export default function CurrentOrders() {
   return (
     <Container>
         <Box sx={{ my: 4 }}>
-            <BreadcrumbLinks links={breadcrumbLinks}/>
-          </Box>
+          <BreadcrumbLinks links={breadcrumbLinks}/>
+        </Box>
         <Typography variant="h4" component="h1" gutterBottom>
             Pending Orders
         </Typography>
