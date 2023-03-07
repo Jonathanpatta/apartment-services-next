@@ -7,8 +7,6 @@ import { Box, Container, Typography } from "@mui/material";
 
 export default function Index() {
   return (
-    <AuthProvider>
-      <AlertProvider>
         <Container >
           <Topbar/>
           <Box sx={{ my: 4 }}>
@@ -23,7 +21,5 @@ export default function Index() {
             </Typography>
           </Box>
         </Container>
-      </AlertProvider>
-    </AuthProvider>
   );
 }
