@@ -151,6 +151,35 @@ function EditForm({ item, addNewItem, handleClose, setOpen }) {
     setCurrentUrl("");
   }
 
+  function handleImageUpload(e){
+    var files = e.target.files
+    if(files.length<1){
+      return
+    }
+    
+    var totalSize = 0
+    var MAX_SIZE_LIMIT = 4 * 1024 *1024
+    for (let i = 0; i < files.length; i++) {
+      const e = files[i];
+      totalSize+=e.size
+    }
+    if(totalSize>MAX_SIZE_LIMIT){
+      var err = `total size of images cannot be more than 4MB got ${totalSize/(1024*1024)}`
+      console.log("error")
+      return
+    }
+
+    const data = new FormData()
+    for (let i = 0; i < files.length; i++) {
+      const e = files[i];
+      data.append("file",e,e.name)
+    }
+    console.log(data)
+    cli.post("/files/uploadImages",data).then(res=>{
+      setImageUrls(urls=>[...res.data,...urls])
+    }).catch(err => console.log(err))
+  }
+
   return (
     <>
       <AppBar
@@ -254,6 +283,10 @@ function EditForm({ item, addNewItem, handleClose, setOpen }) {
               >
                 <AddIcon />
               </IconButton>
+              <Button variant="contained" component="label">
+                Upload
+                <input hidden accept="image/*" multiple type="file" onChange={handleImageUpload}/>
+              </Button>
             </ListItem>
             {imageUrls.map((url,i) => {
               return (

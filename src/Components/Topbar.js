@@ -20,7 +20,7 @@ const Profile = ({user, signInCallback, logoutCallback}) => {
     if(user){
         profileComponent = 
         <IconButton LinkComponent={Link} noLinkStyle href="/profile">
-            <Avatar  src={user.photoURL}  />
+            <Avatar  src={user.photoURL}  imgProps={{referrerPolicy:"no-referrer"}}/>
         </IconButton>
     }
 
