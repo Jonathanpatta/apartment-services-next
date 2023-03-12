@@ -32,13 +32,17 @@ export function ConsumerItemView({itemData,loading,height,withDescription}) {
       </Stack>
     )
   }
+  var thumbnailUrl = "https://img.freepik.com/free-vector/cute-burger-holding-knife-fork-cartoon-fast-food-icon-concept-isolated-flat-cartoon-style_138676-2204.jpg?w=2000"
+  if(item && item.image_urls && item.image_urls.length>0){
+    thumbnailUrl = item.image_urls[0]
+  }
   return (
     <Card >
       <CardMedia
         component="img"
         alt="Food Image"
         height={height}
-        image="https://img.freepik.com/free-vector/cute-burger-holding-knife-fork-cartoon-fast-food-icon-concept-isolated-flat-cartoon-style_138676-2204.jpg?w=2000"
+        image={thumbnailUrl}
       />
       <CardContent>
         <Stack sx={{ display: 'flex', alignItems: 'center',justifyContent:"center"}}>
@@ -56,14 +60,6 @@ export function ConsumerItemView({itemData,loading,height,withDescription}) {
                   {liked?<FavoriteIcon />:<FavoriteBorderIcon/>}
                 </IconButton>
             </Tooltip>
-            
-            {/* <div>
-              <Tooltip title="Order">
-                  <IconButton>
-                      <ShoppingCartIcon />
-                  </IconButton>
-              </Tooltip>
-            </div> */}
 
             <OrderItemButton item={item}/>
 

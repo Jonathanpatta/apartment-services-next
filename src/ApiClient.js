@@ -56,7 +56,6 @@ class ApiClient{
             this.Client.post("/consumer/createOrGet",data=data)
             .then((res) => {
                 this.consumer = res.data
-
                 window.localStorage.setItem("consumer",JSON.stringify(res.data))
             })
             .catch(err => console.log(err))

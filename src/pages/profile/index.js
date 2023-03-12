@@ -58,7 +58,7 @@ export default function Profile() {
                   </ListSubheader>
                 }
               >
-                <CustomListItem icon={<ShoppingCartIcon/>} text="Orders" link="/profile/orderHistory"/>
+                <CustomListItem icon={<ShoppingCartIcon/>} text="Orders" link="/profile/orders"/>
                 <CustomListItem icon={<FavoriteIcon/>} text="Favorites" link="/profile/favorites"/>
                 <CustomListItem icon={<EventRepeatIcon/>} text="Subscriptions" link="/profile/subscriptions"/>
                 <CustomListItem icon={<LogoutIcon/>} text="Logout"/>

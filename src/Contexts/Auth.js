@@ -19,6 +19,7 @@ export function AuthProvider({ children }) {
 
   function isAuthenticated(){
     if(currentUser && apiClient.hasConsumer() && apiClient.hasProducer()){
+      currentUser.getIdToken()
       return true
     }
     return false
