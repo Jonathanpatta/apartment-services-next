@@ -29,6 +29,8 @@ import {
 import theme from "@/Theme";
 import { useAuth } from "@/Contexts/Auth";
 import { useAlerts } from "@/Contexts/Alerts";
+import ImageListView from "../Image/ImageListView";
+import ImageManager from "../Image/ImageManager";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -99,7 +101,6 @@ function EditForm({ item, addNewItem, handleClose, setOpen }) {
   const [imageUrls, setImageUrls] = React.useState(
     item?.image_urls ? item.image_urls : []
   );
-  const [currentUrl, setCurrentUrl] = React.useState("");
 
   
 
@@ -142,101 +143,6 @@ function EditForm({ item, addNewItem, handleClose, setOpen }) {
       setOpen(false);
     }
   };
-
-  function removeImageUrl(url){
-
-    setImageUrls(imageUrls.filter(item => item !== url))
-    cli.post("/files/deleteImages",[url]).then(res=>{
-      setImageUrls(imageUrls.filter(item => item !== res.data[0]))
-    }).catch(err => console.log(err))
-  }
-  function addImageUrl(url) {
-    setImageUrls([url, ...imageUrls]);
-    setCurrentUrl("");
-  }
-
-  function getBase64(file) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => {
-        let encoded = reader.result.toString().replace(/^data:(.*,)?/, '');
-        if ((encoded.length % 4) > 0) {
-          encoded += '='.repeat(4 - (encoded.length % 4));
-        }
-        resolve(encoded);
-      };
-      reader.onerror = error => reject(error);
-    });
-  }
-
-  async function handleBase64ImageUpload(e){
-    console.log("base64")
-    var files = e.target.files
-    console.log(files)
-    if(files.length<1){
-      return
-    }
-    
-    var totalSize = 0
-    var MAX_SIZE_LIMIT = 4 * 1024 *1024
-    for (let i = 0; i < files.length; i++) {
-      const e = files[i];
-      totalSize+=e.size
-    }
-    if(totalSize>MAX_SIZE_LIMIT){
-      var err = `total size of images cannot be more than 4MB got ${totalSize/(1024*1024)}`
-      console.log("error")
-      return
-    }
-    var uploadFiles = []
-    for (let i = 0; i < files.length; i++) {
-      const e = files[i];
-      var data = await getBase64(e)
-
-      uploadFiles.push({
-        file_name:e.name,
-        file_type:e.type,
-        data: data
-      })
-    }
-
-    console.log("files:",uploadFiles)
-
-    cli.post("/files/uploadImagesBase64",uploadFiles).then(res=>{
-      setImageUrls(urls=>[...res.data,...urls])
-    }).catch(err => console.log(err))
-
-  }
-
-  function handleImageUpload(e){
-    var files = e.target.files
-    if(files.length<1){
-      return
-    }
-    
-    var totalSize = 0
-    var MAX_SIZE_LIMIT = 4 * 1024 *1024
-    for (let i = 0; i < files.length; i++) {
-      const e = files[i];
-      totalSize+=e.size
-    }
-    if(totalSize>MAX_SIZE_LIMIT){
-      var err = `total size of images cannot be more than 4MB got ${totalSize/(1024*1024)}`
-      console.log("error")
-      return
-    }
-
-    const data = new FormData()
-    for (let i = 0; i < files.length; i++) {
-      const e = files[i];
-      data.append("file",e,e.name)
-    }
-    console.log(data)
-    cli.post("/files/uploadImages",data).then(res=>{
-      setImageUrls(urls=>[...res.data,...urls])
-    }).catch(err => console.log(err))
-  }
 
   return (
     <>
@@ -315,59 +221,8 @@ function EditForm({ item, addNewItem, handleClose, setOpen }) {
                 onChange={handleAllowSubscriptionsChange}
               />
 
-          <List>
-            <ListItem sx={{ alignItems: "center", justifyContent: "center" }}>
-              <TextField
-                sx={{ my: 2 }}
-                fullWidth
-                id="item-name"
-                label="Add Image Url"
-                variant="standard"
-                value={currentUrl}
-                onChange={(e) => {
-                  setCurrentUrl(e.target.value);
-                }}
-                onKeyDown={(e) => {
-                  if (e.key == "Enter") {
-                    addImageUrl(currentUrl);
-                  }
-                }}
-              />
-              <IconButton
-                aria-label="delete"
-                onClick={() => {
-                  addImageUrl(currentUrl);
-                }}
-              >
-                <AddIcon />
-              </IconButton>
-              <Button variant="contained" component="label">
-                Upload
-                <input hidden accept="image/*" multiple type="file" onChange={handleBase64ImageUpload}/>
-              </Button>
-            </ListItem>
-            {imageUrls.map((url,i) => {
-              return (
-                <ListItem
-                  key={i}
-                  disablePadding
-                  secondaryAction={
-                    <IconButton
-                      edge="end"
-                      aria-label="remove"
-                      onClick={() => {
-                        removeImageUrl(url);
-                      }}
-                    >
-                      <DeleteIcon />
-                    </IconButton>
-                  }
-                >
-                  <ListItemText primary={url} />
-                </ListItem>
-              );
-            })}
-          </List>
+          
+          <ImageManager imageUrls={imageUrls} setImageUrls={setImageUrls} cli={cli} />
         </Box>
       </Container>
     </>

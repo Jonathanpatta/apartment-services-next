@@ -14,13 +14,18 @@ export default function ItemView({itemData,editItem}) {
     editItem(item)
   }
   // const [item, setItem] = React.useState(itemData)
+
+  var thumbnailUrl = "https://img.freepik.com/free-vector/cute-burger-holding-knife-fork-cartoon-fast-food-icon-concept-isolated-flat-cartoon-style_138676-2204.jpg?w=2000"
+  if(item && item.image_urls && item.image_urls.length>0){
+    thumbnailUrl = item.image_urls[0]
+  }
   return (
     <Card sx={{ maxWidth: 345 }}>
       <CardMedia
         component="img"
         alt="Food Image"
         height="200"
-        image="https://img.freepik.com/free-vector/cute-burger-holding-knife-fork-cartoon-fast-food-icon-concept-isolated-flat-cartoon-style_138676-2204.jpg?w=2000"
+        image={thumbnailUrl}
       />
       <CardContent>
         <Stack sx={{ display: 'flex', alignItems: 'center',justifyContent:"center"}}>
