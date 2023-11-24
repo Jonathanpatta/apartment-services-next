@@ -14,4 +14,8 @@ const nextConfig = {
   },
 }
 
+module.exports = {
+  target: "experimental-serverless-trace"
+};
+
 module.exports = nextConfig
