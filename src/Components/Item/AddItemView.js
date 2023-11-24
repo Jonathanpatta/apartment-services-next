@@ -29,7 +29,7 @@ import {
 import theme from "@/Theme";
 import { useAuth } from "@/Contexts/Auth";
 import { useAlerts } from "@/Contexts/Alerts";
-import ImageManager from "../Image/ImageManager";
+import ImageManager from "src/Components/Image/ImageManager";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
