@@ -29,7 +29,6 @@ import {
 import theme from "@/Theme";
 import { useAuth } from "@/Contexts/Auth";
 import { useAlerts } from "@/Contexts/Alerts";
-import ImageListView from "../Image/ImageListView";
 import ImageManager from "../Image/ImageManager";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
